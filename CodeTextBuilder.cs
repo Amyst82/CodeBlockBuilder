@@ -96,14 +96,14 @@ namespace CodeTextBuilder
         /// <summary>
         /// Count of tabs to be added.
         /// </summary>
-        public int Indent = 0;
+        public int Indent = -1;
         public string Line { get; set; } = String.Empty;
         /// <summary>
         /// Creates a line with some indents.
         /// </summary>
         /// <param name="line">¯\_(ツ)_/¯</param>
         /// <param name="indent">Counts of tabs that will be added. Default is 0. Use Build() if you set the indent different of zero.</param>
-        public CodeTextLine(string line, int indent = 0)
+        public CodeTextLine(string line, int indent = -1)
         {
             this.Indent = indent;
             this.Line = line;
@@ -150,7 +150,12 @@ namespace CodeTextBuilder
             List<string> result = new List<string>();
             foreach (object line in Items)
             {
-                if (line is CodeTextBuilderBase)
+                if(line is CodeTextLine _line)
+                {
+                    if(_line.Indent > -1)
+                        result.Add(_line.Build());
+                }
+                if (line is CodeTextBlock)
                 {
                     result.Add((line as CodeTextBuilderBase).Build(Indent));
                 }
